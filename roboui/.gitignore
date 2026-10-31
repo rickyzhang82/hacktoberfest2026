@@ -1,0 +1,35 @@
+# Model weights (multi-GB) - never commit
+models/
+*.gguf
+*.bin
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.onnx
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Streamlit / IDE / OS
+.streamlit/secrets.toml
+.idea/
+.vscode/
+.DS_Store
+
+# Generated output
+output/

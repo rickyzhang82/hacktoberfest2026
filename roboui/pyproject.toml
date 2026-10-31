@@ -1,0 +1,9 @@
+[project]
+name = "roboui"
+version = "0.1.0"
+description = "On-device sketch-to-website generator using Gemma 4 + LangChain"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
