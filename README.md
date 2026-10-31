@@ -1,6 +1,6 @@
 # Hacktoberfest 2026
 
-Welcome! This repository is a beginner-friendly project for [Hacktoberfest 2026](https://hacktoberfest.com). Whether it's your first open source contribution or your hundredth, you're welcome here.
+Welcome! This repository is a beginner-friendly project for [Hacktoberfest 2026](https://hacktoberfest.com). Whether it's your first open source contribution or your hundredth, you're welcome here!
 
 ## What is Hacktoberfest?
 
