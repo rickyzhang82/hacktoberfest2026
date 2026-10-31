@@ -1,4 +1,0 @@
-# Real local inference (optional; not installed in CI / mock mode)
--r requirements.txt
-llama-cpp-python>=0.3
-pytesseract>=0.3   # optional OCR for pre-inference PII redaction

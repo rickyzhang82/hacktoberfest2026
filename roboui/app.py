@@ -1,87 +1,70 @@
-"""RoboUI Streamlit app: upload a sketch, get a website."""
-from __future__ import annotations
+"""Turn a hand-drawn web page layout (JPEG) into a static HTML file.
 
-import logging
-import sys
+Uses LangChain with a multimodal Gemma model served by Ollama.
+"""
+import argparse
+import base64
+import re
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent / "src"))
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_ollama import ChatOllama
 
-import streamlit as st
-import streamlit.components.v1 as components
+OLLAMA_URL = "http://localhost:11434"
+MODEL = "gemma4:e4b"
 
-from roboui.config import Settings, configure_logging
-from roboui.errors import RoboUIError
-from roboui.inference import create_backend
-from roboui.pipeline import SketchToSitePipeline
-from roboui.sandbox import sandboxed_iframe
+SYSTEM_PROMPT = """You are a front-end developer. The user gives you a hand-drawn \
+sketch of a web page layout. Convert it into a single static HTML file.
 
-logger = logging.getLogger("roboui.app")
+Rules:
+- Reproduce the layout using <div> elements (use flexbox or grid with inline <style>).
+- Draw boxes labelled as buttons as <button> elements, keeping their text.
+- Draw boxes marked with an X, a picture or "img" as <img> elements, using
+  https://placehold.co/WIDTHxHEIGHT as src and a descriptive alt.
+- Keep any text written in the sketch.
+- Use only HTML and CSS: no JavaScript, no external libraries.
+- Output ONLY the complete HTML document, starting with <!DOCTYPE html>. No explanations."""
 
-st.set_page_config(page_title="RoboUI", page_icon="🤖", layout="wide")
+
+def extract_html(text: str) -> str:
+    """Strip markdown code fences the model may wrap around the HTML."""
+    match = re.search(r"```(?:html)?\s*(.*?)```", text, re.DOTALL)
+    return (match.group(1) if match else text).strip()
 
 
-@st.cache_resource(show_spinner="Loading model...")
-def load_backend(backend_name: str):
-    settings = Settings.from_env()
-    object.__setattr__(settings, "backend", backend_name)  # frozen dataclass override
-    return create_backend(settings)
+def sketch_to_html(image_path: Path, model: str, base_url: str) -> str:
+    image_b64 = base64.b64encode(image_path.read_bytes()).decode()
+    llm = ChatOllama(model=model, base_url=base_url, temperature=0.2)
+    messages = [
+        SystemMessage(content=SYSTEM_PROMPT),
+        HumanMessage(
+            content=[
+                {"type": "text", "text": "Convert this sketch into HTML."},
+                {
+                    "type": "image_url",
+                    "image_url": f"data:image/jpeg;base64,{image_b64}",
+                },
+            ]
+        ),
+    ]
+    return extract_html(llm.invoke(messages).content)
 
 
 def main() -> None:
-    settings = Settings.from_env()
-    configure_logging(settings.log_level)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("image", type=Path, help="JPEG of the drawn layout")
+    parser.add_argument("-o", "--output", type=Path, default=Path("output.html"))
+    parser.add_argument("--model", default=MODEL)
+    parser.add_argument("--base-url", default=OLLAMA_URL)
+    args = parser.parse_args()
 
-    st.title("🤖 RoboUI")
-    st.caption("Hand-drawn sketch → website. Runs on-device with Gemma 4 + LangChain.")
+    if args.image.suffix.lower() not in {".jpg", ".jpeg"}:
+        parser.error("input must be a JPEG (.jpg / .jpeg)")
 
-    with st.sidebar:
-        st.header("Settings")
-        options = ["mock", "llama_cpp", "cloud"]
-        backend_name = st.selectbox(
-            "Inference backend", options,
-            index=options.index(settings.backend) if settings.backend in options else 0,
-            help="mock needs no model weights. llama_cpp runs quantized Gemma 4 locally.",
-        )
-        st.caption("🔒 Network is blocked during local inference; previews run under a no-network CSP.")
-
-    left, right = st.columns(2)
-    with left:
-        upload = st.file_uploader("Upload your sketch", type=["png", "jpg", "jpeg", "webp"])
-        notes = st.text_area("Optional notes", placeholder="e.g. dark theme, indigo accent")
-        go = st.button("Generate website", type="primary", disabled=upload is None)
-        if upload:
-            st.image(upload, caption="Your sketch", use_container_width=True)
-
-    if go and upload:
-        try:
-            backend = load_backend(backend_name)
-            with st.spinner("Analyzing sketch and generating code..."):
-                result = SketchToSitePipeline(backend).run(upload.getvalue(), notes)
-            st.session_state["result"] = result
-        except RoboUIError as exc:
-            logger.error("Generation failed: %s", exc)
-            st.error(f"{type(exc).__name__}: {exc}")
-        except OSError as exc:
-            logger.exception("Could not read upload")
-            st.error(f"Could not process the uploaded image: {exc}")
-
-    result = st.session_state.get("result")
-    if result:
-        with right:
-            tab_preview, tab_code, tab_desc = st.tabs(["Preview", "HTML", "Vision analysis"])
-            with tab_preview:
-                components.html(sandboxed_iframe(result.html), height=720, scrolling=True)
-            with tab_code:
-                st.code(result.html, language="html")
-                st.download_button("Download index.html", result.html, "index.html", "text/html")
-            with tab_desc:
-                st.text(result.description)
-                if result.redactions:
-                    st.warning(f"PII/secrets masked before inference: {result.redactions}")
-                p = result.plan
-                st.caption(f"Backend: {result.backend} · context {p.n_ctx} tokens · "
-                           f"description budget {p.description_budget} · max output {p.code_max_tokens}")
+    html = sketch_to_html(args.image, args.model, args.base_url)
+    args.output.write_text(html, encoding="utf-8")
+    print(f"Wrote {args.output}")
 
 
-main()
+if __name__ == "__main__":
+    main()
