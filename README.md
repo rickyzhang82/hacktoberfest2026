@@ -1,61 +1,40 @@
-# Hacktoberfest 2026
+# roboui
 
-Welcome! This repository is a beginner-friendly project for [Hacktoberfest 2026](https://hacktoberfest.com). Whether it's your first open source contribution or your hundredth, you're welcome here!
+**Draw a web page. Get a web page.**
 
-## What is Hacktoberfest?
+roboui turns a hand-drawn web page layout (a JPEG) into a working static HTML file with `div`, `button` and `img` elements. It is a LangChain app that runs Gemma 4 e4b locally through Ollama.
 
-Hacktoberfest is a yearly event that encourages people to contribute to open source projects throughout October. Make quality contributions to participating repositories and earn rewards.
+## Why roboui?
 
-## Getting Started
+Building user interfaces has long been locked behind code. A designer or artist with a clear vision had to learn HTML and CSS, or hand the idea to a developer and hope it survived the translation.
 
-1. **Fork** this repository using the button at the top right.
-2. **Clone** your fork:
-   ```bash
-   git clone https://github.com/<your-username>/hacktoberfest2026.git
-   cd hacktoberfest2026
-   ```
-3. **Create a branch** for your change:
-   ```bash
-   git checkout -b my-contribution
-   ```
-4. **Make your changes** (see ideas below).
-5. **Commit** with a clear message:
-   ```bash
-   git add .
-   git commit -m "Add <short description>"
-   ```
-6. **Push** to your fork:
-   ```bash
-   git push origin my-contribution
-   ```
-7. **Open a Pull Request** against the `main` branch and describe what you changed.
+roboui aims to **liberate UI technology for non-technical design artists**:
 
-## Contribution Ideas
+- **Sketch instead of code.** Draw boxes, buttons and image placeholders on paper or a tablet. That drawing is the only input.
+- **Instant, tangible results.** Within seconds the sketch becomes a real page you can open in any browser, share and iterate on.
+- **No toolchain to learn.** The output is plain HTML and CSS, with no frameworks, build steps or JavaScript.
+- **Private and free.** The model runs on your own machine through Ollama. Your designs never leave your computer and there are no API fees.
+- **A bridge to developers.** The generated HTML is readable and editable, so it works as a starting point that a developer can pick up and extend.
 
-- Add your name to the [Contributors](#contributors) list
-- Fix typos or improve documentation
-- Add a useful resource, tutorial, or tool to a list
-- Report bugs or suggest improvements by opening an issue
-- Pick up an issue labelled `good first issue` or `hacktoberfest`
+Creative people should be able to bring their interface ideas to life directly, so roboui makes the pencil the only tool they need.
 
-## Contribution Guidelines
+## Setup
 
-- Keep pull requests small and focused on one change.
-- Make sure your contribution is meaningful. Spam or low-quality PRs will be marked `invalid` or `spam`.
-- Be respectful and follow the [Code of Conduct](CODE_OF_CONDUCT.md).
-- Don't edit other people's entries in the Contributors list.
-- Check for existing issues and PRs before opening a new one.
+```bash
+ollama pull gemma4:e4b      # Ollama must be running at http://localhost:11434
+pip install -r requirements.txt
+```
 
-## Contributors
+## Usage
 
-Add your name below in the format `- [Your Name](https://github.com/your-username)`:
+```bash
+python app.py layout.jpg -o output.html
+```
 
-<!-- Add your name below this line -->
+Options: `--model` (default `gemma4:e4b`) and `--base-url` (default `http://localhost:11434`).
 
-## License
+## Tips for drawing
 
-This project is licensed under the [MIT License](LICENSE).
-
-## Happy Hacking! 🎃
-
-Thanks for contributing and being part of the open source community.
+- Write the label inside each button box.
+- Mark image areas with a big X.
+- Use dark ink on a white background.
