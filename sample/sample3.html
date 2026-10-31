@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Sketch</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .text-container {
+            width: 80%;
+            min-height: 100px;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 80%;
+            margin-bottom: 40px;
+        }
+        .image-placeholder {
+            width: 100%;
+            padding-top: 100%; /* Creates a square aspect ratio */
+            position: relative;
+            border: 1px solid #ccc;
+        }
+        .image-placeholder img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: 1px solid #000;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="text-container">
+        Text
+    </div>
+
+    <div class="image-grid">
+        <div class="image-placeholder">
+            <img src="https://placehold.co/200x200/cccccc/333333?text=image" alt="Placeholder image 1">
+        </div>
+        <div class="image-placeholder">
+            <img src="https://placehold.co/200x200/cccccc/333333?text=image" alt="Placeholder image 2">
+        </div>
+        <div class="image-placeholder">
+            <img src="https://placehold.co/200x200/cccccc/333333?text=image" alt="Placeholder image 3">
+        </div>
+        <div class="image-placeholder">
+            <img src="https://placehold.co/200x200/cccccc/333333?text=image" alt="Placeholder image 4">
+        </div>
+        <div class="image-placeholder">
+            <img src="https://placehold.co/200x200/cccccc/333333?text=image" alt="Placeholder image 5">
+        </div>
+        <div class="image-placeholder">
+            <img src="https://placehold.co/200x200/cccccc/333333?text=image" alt="Placeholder image 6">
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button>button</button>
+    </div>
+
+</body>
+</html>

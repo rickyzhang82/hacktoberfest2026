@@ -23,7 +23,8 @@ Rules:
   https://placehold.co/WIDTHxHEIGHT as src and a descriptive alt.
 - Keep any text written in the sketch.
 - Use only HTML and CSS: no JavaScript, no external libraries.
-- Output ONLY the complete HTML document, starting with <!DOCTYPE html>. No explanations."""
+- Output ONLY the complete HTML document, starting with <!DOCTYPE html>. No explanations.
+- Only consider the box only includes text: image, button, text. Ignore any other box"""
 
 
 def extract_html(text: str) -> str:

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sketch Layout</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .row {
+            display: flex;
+            gap: 15px;
+            align-items: stretch; /* Ensures boxes in the same row have similar height */
+        }
+        .box {
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px; /* Default height for visual consistency */
+            flex-grow: 1;
+            box-sizing: border-box;
+        }
+        .text-box {
+            font-size: 24px;
+            text-align: center;
+        }
+        .image-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .image-box img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            border: 1px solid #333;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            flex-grow: 1;
+            text-align: center;
+        }
+        /* Specific adjustments for layout proportions */
+        .row-1 .box:first-child {
+            flex: 1; /* Takes up roughly half the space */
+            min-height: 250px;
+        }
+        .row-1 .box:last-child {
+            flex: 1;
+            min-height: 250px;
+        }
+        .row-3 {
+            justify-content: center;
+        }
+        .row-3 .box {
+            width: 80%;
+            min-height: 150px;
+        }
+        .row-4 .box {
+            flex: 1;
+            min-height: 150px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Row 1: Text and Image -->
+        <div class="row row-1">
+            <div class="box text-box">
+                text
+            </div>
+            <div class="box image-box">
+                <img src="https://placehold.co/400x250/cccccc/333333?text=Image" alt="Placeholder image for top right section">
+            </div>
+        </div>
+
+        <!-- Row 2: Three Buttons -->
+        <div class="row row-2">
+            <div class="button-group">
+                <button>button</button>
+                <button>button</button>
+                <button>button</button>
+            </div>
+        </div>
+
+        <!-- Row 3: Large Text Box -->
+        <div class="row row-3">
+            <div class="box text-box">
+                text
+            </div>
+        </div>
+
+        <!-- Row 4: Two Images -->
+        <div class="row row-4">
+            <div class="box image-box">
+                <img src="https://placehold.co/300x150/cccccc/333333?text=Image" alt="Placeholder image for bottom left section">
+            </div>
+            <div class="box image-box">
+                <img src="https://placehold.co/300x150/cccccc/333333?text=Image" alt="Placeholder image for bottom right section">
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
